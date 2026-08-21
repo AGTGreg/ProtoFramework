@@ -1,0 +1,120 @@
+{
+  "proto_version": "1.9.1",
+  "blocks": [
+    "orient",
+    "state-protocol",
+    "ideas-protocol",
+    "worklog-protocol",
+    "decisions-protocol",
+    "memory-protocol",
+    "mirrors-lifecycle",
+    "connections-protocol",
+    "session-close-checklist",
+    "change-discipline"
+  ],
+  "placeholders": [
+    "PROJECT_NAME",
+    "PROJECT_ONE_LINER",
+    "WORKLOG_TAGS",
+    "MODULES",
+    "SNAPSHOT_DATE",
+    "FILL_SOURCES",
+    "HARD_RULES",
+    "CLIENT_NAME",
+    "STACK_BASELINE",
+    "CONVENTION_POINTERS",
+    "PROTO_FRAMEWORK_VERSION",
+    "INIT_TODOS"
+  ],
+  "core": [
+    {
+      "src": "core/CLAUDE.md",
+      "dest": "CLAUDE.md",
+      "strategy": "merge-blocks"
+    },
+    {
+      "src": "core/STATE.md",
+      "dest": "proto/STATE.md",
+      "strategy": "copy-if-absent"
+    },
+    {
+      "src": "core/IDEAS.md",
+      "dest": "proto/IDEAS.md",
+      "strategy": "copy-if-absent"
+    },
+    {
+      "src": "core/WORKLOG.md",
+      "dest": "proto/WORKLOG.md",
+      "strategy": "copy-if-absent"
+    },
+    {
+      "src": "core/memory/MEMORY.md",
+      "dest": "proto/memory/MEMORY.md",
+      "strategy": "copy-if-absent"
+    },
+    {
+      "src": "core/decisions.md",
+      "dest": "proto/decisions.md",
+      "strategy": "copy-if-absent"
+    },
+    {
+      "src": "core/connections.md",
+      "dest": "proto/connections.md",
+      "strategy": "copy-if-absent"
+    },
+    {
+      "src": "core/archives/.gitkeep",
+      "dest": "proto/archives/.gitkeep",
+      "strategy": "copy-if-absent"
+    }
+  ],
+  "modules": [
+    {
+      "name": "architecture",
+      "src": "modules/architecture.md",
+      "dest": "proto/context/architecture.md",
+      "strategy": "copy-if-absent",
+      "offer": "The project has (or will have) a codebase — stack, layout, commands, external services."
+    },
+    {
+      "name": "environments",
+      "src": "modules/environments.md",
+      "dest": "proto/context/environments.md",
+      "strategy": "copy-if-absent",
+      "offer": "Something runs or deploys somewhere — environments, access, deploy procedure."
+    },
+    {
+      "name": "client",
+      "src": "modules/client.md",
+      "dest": "proto/context/client.md",
+      "strategy": "copy-if-absent",
+      "offer": "Work is delivered to a client or external stakeholder — contacts, commercial state, expectations."
+    },
+    {
+      "name": "automations",
+      "src": "modules/automations-inventory.md",
+      "dest": "proto/context/automations-inventory.md",
+      "strategy": "copy-if-absent",
+      "offer": "The project owns automations, routines, or integration glue — inventory of what runs where."
+    },
+    {
+      "name": "working-docs",
+      "src": "modules/working-docs.md",
+      "dest": "proto/docs/README.md",
+      "strategy": "copy-if-absent",
+      "offer": "The project produces long-form working material — investigation write-ups, playbooks, plans, specs — that needs a durable home."
+    }
+  ],
+  "strategies": {
+    "merge-blocks": "If dest exists: keep ALL existing content, append the proto-marked blocks (and only them) below it; never duplicate a block that already exists (match by marker name). If dest absent: copy whole file.",
+    "copy-if-absent": "Copy only if dest does not exist. On collision: skip and report — never overwrite."
+  },
+  "module_selection": "Modules are independent and à la carte — no bundles. proto-init proposes each module whose `offer` line matches what it learned about the project (type, codebase scan, interview answers); the user confirms the final set. Zero modules is valid.",
+  "removed_blocks": [
+    {
+      "name": "external-conventions",
+      "removed_in": "1.7.0",
+      "disposition": "delete — its principle line lives in the 'Convention pointers' section"
+    }
+  ]
+}
