@@ -1,5 +1,16 @@
 # Changelog
 
+## 1.10.0 — 2026-08-25
+
+Orient rewritten as a read ladder (`orient` →1.10.0) — cheaper, more deterministic, and sub-agent/concurrency aware.
+
+- **Session start is one bounded command** (verbatim in the block): STATE + memory index whole, worklog top entry via `head -20`, context stamps via `head -4`. Every limit is guaranteed by an existing protocol cap; a visibly truncated top entry (no **Commits:** line) → read the file. Replaces 4-6 full-file reads whose "skim" instruction was not executable as written.
+- **Escalation is trigger-based, not size-based:** modify/answer-from-state → Open state + mirror register; resuming a workstream → tag-grep then full entries; relevant snapshot/fact → full read; deeper background → connections. Full reads are the ladder's upper rungs, never forbidden — just never paid for before a trigger says they're needed.
+- **Sub-agent rule:** dispatched sub-agents skip all protocols — task from prompt, report back, never write `proto/` or commit; the dispatching session is the sole scribe.
+- **Concurrency rule:** one writing session per working tree; a second concurrent session stays read-only or uses its own git worktree.
+- `worklog-protocol` (→1.10.0) and `memory-protocol` (→1.10.0): session-start read rules now defer to the ladder instead of restating it.
+
+
 ## 1.9.1 — 2026-08-21
 
 proto-update hardened by a live run against a real 1.6.0-era project:

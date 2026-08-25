@@ -2,16 +2,30 @@
 
 {{PROJECT_ONE_LINER}}
 
-<!-- proto:begin orient@1.6.0 -->
-## Orient yourself (every session)
+<!-- proto:begin orient@1.10.0 -->
+## Orient yourself (the read ladder)
 
-The `proto/` directory is the project's operational record — everything in it belongs to the working protocol, not the codebase.
+**Sub-agents skip all protocols.** A sub-agent dispatched for a specific task ignores this file's protocols: do the task from the context in your prompt, report back, write nothing to `proto/`, commit nothing. The main session is the sole scribe of the record — sub-agent results are logged by the session that dispatched them.
 
-0. Read `proto/STATE.md` — the project's position: first action, goal, roadmap stage, blockers.
-1. Read `proto/WORKLOG.md` (top entry only) and `proto/memory/MEMORY.md` — what the last session did and the durable repo facts.
-2. Skim `proto/context/` — for each file, read only its title and snapshot stamp. Full-read a file only when it bears on the current task. A stamp that is stale or contradicted by an external source of truth → refresh that file as part of your work.
-3. If `proto/mirrors/` exists, check it — copies of artifacts that live in external systems; the worklog's Open state tells you if any are mid-deployment.
-4. For anything deeper (clients, strategy, other projects), query the knowledge sources listed in `proto/connections.md`.
+The `proto/` directory is the project's operational record. One session writes it at a time — a second concurrent session stays read-only or works in its own git worktree (git then surfaces conflicts instead of silently losing them).
+
+**Session start — one command** (no shell available → read the same files with the same line limits):
+
+```bash
+cat proto/STATE.md proto/memory/MEMORY.md && head -n 20 proto/WORKLOG.md && head -n 4 proto/context/*.md 2>/dev/null
+```
+
+The limits are guaranteed by the protocol caps (STATE ≤ ~60 lines, memory index ≤ 25 lines, worklog entries ≤ 12 lines, context stamps on lines 1-3). If the top worklog entry looks truncated (no **Commits:** line), read the file.
+
+**Escalate — read more exactly when a trigger fires, never before:**
+
+| Trigger | Read |
+|---|---|
+| About to modify anything, or answering from current project state | The top entry's Open state; `proto/mirrors/register.md` if it exists |
+| Resuming an existing workstream | `grep -n "<tag>" proto/WORKLOG.md proto/archives/worklog-*.md`, then the matching entries in full |
+| A context snapshot bears on the task | That file in full; a stale or contradicted stamp → refresh it as part of your work |
+| A memory index line is relevant to the task | That fact file |
+| Deeper background (clients, strategy, other projects) | The knowledge sources in `proto/connections.md` |
 <!-- proto:end orient -->
 
 <!-- proto:begin state-protocol@1.5.0 -->
@@ -48,14 +62,12 @@ Project data, not protocol — proto-update never touches this section.
 
 {{WORKLOG_TAGS}}
 
-<!-- proto:begin worklog-protocol@1.7.0 -->
+<!-- proto:begin worklog-protocol@1.10.0 -->
 ## WORKLOG.md protocol (deterministic — follow exactly)
 
 `proto/WORKLOG.md` is the session-handoff journal. Newest entry first, directly under the `---` marker.
 
-**READ:**
-- At session start: read only the newest entry (top of file).
-- Before touching any task or workstream: `grep -n "<tag>" proto/WORKLOG.md proto/archives/worklog-*.md` for its tags and read the matching entries. Never rely on the top entry alone when resuming older work.
+**READ:** per the orient ladder — the top entry at session start, tag-grep (`proto/WORKLOG.md` + `proto/archives/worklog-*.md`) when resuming a workstream. Never rely on the top entry alone when resuming older work.
 
 **WRITE — append an entry at each of these moments, no exceptions:**
 1. A unit of work is committed (one entry per commit or coherent commit group).
@@ -107,13 +119,13 @@ Record of meaningful decisions and why — capture the *why*, not just the *what
 ```
 <!-- proto:end decisions-protocol -->
 
-<!-- proto:begin memory-protocol@1.5.0 -->
+<!-- proto:begin memory-protocol@1.10.0 -->
 ## Repo-local memory protocol (deterministic — follow exactly)
 
 Durable facts live in `proto/memory/` **inside this repo** — never in the global `~/.claude` auto-memory (it must stay empty of this project's content).
 
 **READ:**
-- At session start (orient step 1): read `proto/memory/MEMORY.md` in full — it is the index, one line per fact.
+- At session start (orient ladder, session-start command): `proto/memory/MEMORY.md` in full — it is the index, one line per fact.
 - Read a fact file's body only when its index line is relevant to the current task. Write index lines so that this decision is makeable from the line alone.
 
 **WRITE — a fact qualifies only if ALL three are yes:**
