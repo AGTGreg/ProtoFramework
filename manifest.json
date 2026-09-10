@@ -1,9 +1,11 @@
 {
-  "proto_version": "1.10.0",
+  "proto_version": "1.11.0",
   "blocks": [
     "orient",
     "state-protocol",
     "ideas-protocol",
+    "plain-language",
+    "grounding-protocol",
     "worklog-protocol",
     "decisions-protocol",
     "memory-protocol",
@@ -15,6 +17,7 @@
   "placeholders": [
     "PROJECT_NAME",
     "PROJECT_ONE_LINER",
+    "OWNER_LANGUAGE",
     "WORKLOG_TAGS",
     "MODULES",
     "SNAPSHOT_DATE",

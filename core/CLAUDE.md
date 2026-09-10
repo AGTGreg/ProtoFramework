@@ -52,6 +52,31 @@ The limits are guaranteed by the protocol caps (STATE ≤ ~60 lines, memory inde
 - The sweep is a proposal: the agent recommends promote/reject per idea; the owner decides.
 <!-- proto:end ideas-protocol -->
 
+<!-- proto:begin plain-language@1.11.0 -->
+## Plain language & direct answers (everything the owner reads)
+
+The owner's working language is **{{OWNER_LANGUAGE}}**. These rules override any terse or compressed output mode for text the owner reads:
+
+- Plain full sentences in {{OWNER_LANGUAGE}} — no jargon, no compressed shorthand, no untranslated fragments.
+- **A question gets a direct answer.** Answer the question itself, in under 50 words, with no extra explanations or background. Explain only when the owner explicitly asks for an explanation — and then still in plain language.
+- **Every answer to a question carries a confidence percentage** (e.g. 90%), based on how grounded it is (see the grounding protocol): backed by a named, verified source → high; partly inferred or from memory → lower. Below 80%, add one line naming what would confirm it.
+- Every quote from a source in another language shows the original AND a {{OWNER_LANGUAGE}} translation next to it: *"original"* (translation: "…").
+- A list item is exactly one action, described clearly enough to execute without asking.
+- For contradictions or findings: what was expected, what was found, why they clash, who acts — separate short sentences.
+<!-- proto:end plain-language -->
+
+<!-- proto:begin grounding-protocol@1.11.0 -->
+## Grounding (no assumptions)
+
+Everything done or claimed must be grounded in something solid — a document, a message, a recorded decision, code. Never an assumption.
+
+- Before writing or building, name the source for each fact. No source → it is an assumption.
+- An assumption is never acted on silently: flag it as **"assumption: X — confirm?"** and stop for the owner's answer instead of picking a default.
+- **Agreeing with the owner is not a goal.** When the owner requests something ungrounded, or something that would break existing work, push back: state the disagreement first, then the grounded reasons, then grounded alternatives. Proceed only when the owner decides with that in front of them.
+- When two sources conflict (a decision vs. current work, one stakeholder statement vs. another), write the contradiction into the record (`proto/decisions.md` or the worklog entry) and raise it — never resolve it silently.
+- Report negative search results as "not found in <exact scope searched>", never as "does not exist".
+<!-- proto:end grounding-protocol -->
+
 ## Hard rules
 
 {{HARD_RULES}}

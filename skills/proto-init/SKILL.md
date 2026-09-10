@@ -31,6 +31,7 @@ Read `manifest.json` from the template root. It defines: the file copy plan (`co
 4. Roadmap stages, if any? (free text, e.g. "explore → build → harden"; enter to skip → the STATE.md roadmap section says "no stages")
 5. Local-only repo? (yes → add "commit freely, never add a remote or push" to the `{{HARD_RULES}}` list)
 6. Auto-fill sources: "Which external systems hold state for this project? (task tracker URL, knowledge base / wiki, none)" — whatever the user names drives step 3 and seeds `proto/connections.md`.
+7. Owner's working language? (default: English → fills `{{OWNER_LANGUAGE}}`)
 
 ### 2b. Module proposal (à la carte — no bundles)
 

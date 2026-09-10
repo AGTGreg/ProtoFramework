@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.11.0 — 2026-09-10
+
+Two new framework-owned behavior blocks — baked in so every agent on a proto project follows them regardless of its own memory or configuration:
+
+- **`plain-language`** — everything the owner reads is in the owner's working language (new `{{OWNER_LANGUAGE}}` placeholder, init question, default English), plain full sentences, no jargon. Questions get direct answers under 50 words with no unsolicited explanations; every answer to a question carries a confidence percentage tied to how grounded it is (below 80% → one line naming what would confirm it). Foreign-language quotes always shown with a translation; one action per list item; contradictions reported as expected / found / clash / who acts.
+- **`grounding-protocol`** — every claim and action grounded in a named source; assumptions flagged as "assumption: X — confirm?" and stopped on, never defaulted; agreeing with the owner is not a goal — ungrounded or breaking requests get pushback (disagreement first, grounded reasons, grounded alternatives); source conflicts written into the record and raised, never silently resolved; negative search results reported as "not found in <scope>", never "does not exist".
+- Blocks: 10 → 12.
+
+
 ## 1.10.0 — 2026-08-25
 
 Orient rewritten as a read ladder (`orient` →1.10.0) — cheaper, more deterministic, and sub-agent/concurrency aware.
