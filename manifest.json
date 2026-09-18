@@ -1,5 +1,5 @@
 {
-  "proto_version": "1.11.0",
+  "proto_version": "1.12.0",
   "blocks": [
     "orient",
     "state-protocol",
@@ -34,6 +34,11 @@
       "src": "core/CLAUDE.md",
       "dest": "CLAUDE.md",
       "strategy": "merge-blocks"
+    },
+    {
+      "src": "core/AGENTS.md",
+      "dest": "AGENTS.md",
+      "strategy": "copy-if-absent"
     },
     {
       "src": "core/STATE.md",

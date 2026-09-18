@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.12.0 — 2026-09-18
+
+Goose (and any other harness that reads `AGENTS.md`) now works on a fresh proto project with no manual step — the template ships the shim.
+
+- **New core file: `core/AGENTS.md` → project-root `AGENTS.md`, strategy `copy-if-absent`.** It holds the relative import `@CLAUDE.md` plus a short operational note, so an `AGENTS.md`-reading harness loads the project's CLAUDE.md (all protocol blocks) into context. Project-specific rules — run from the repo root, local-only git, destructive-command go-ahead, sub-agents skip protocols, owner decides — stay in CLAUDE.md, set by proto-init from the onboarding answers; the shim duplicates none of it.
+- **An existing `AGENTS.md` is never overwritten** — `copy-if-absent` skips the collision and reports it, so a project with its own shim (e.g. one hand-made before this release) keeps it untouched.
+- Additive release: no block swaps, no data-file or module changes.
+- Blocks: 12 (unchanged).
+
+
 ## 1.11.0 — 2026-09-10
 
 Two new framework-owned behavior blocks — baked in so every agent on a proto project follows them regardless of its own memory or configuration:
