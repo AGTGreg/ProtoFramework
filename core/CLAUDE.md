@@ -208,16 +208,17 @@ Registry of the systems reachable from this workspace — task trackers, knowled
 5. Everything committed? No orphan changes in the tree.
 <!-- proto:end session-close-checklist -->
 
-<!-- proto:begin change-discipline@1.8.0 -->
+<!-- proto:begin change-discipline@1.9.0 -->
 ## The map: what each file holds and how it changes
 
-Everything below sits inside `proto/` — the project's operational record, separated from the codebase at the root. Only CLAUDE.md lives at the root.
+Everything below sits inside `proto/` — the project's operational record, separated from the codebase at the root. Only two files live at the root: `CLAUDE.md` (rules of operation) and `AGENTS.md` (a shim that imports it, so an `AGENTS.md`-reading harness loads the protocol).
 
 **Ownership rule:** the proto blocks in this file (`<!-- proto:begin … -->` … `<!-- proto:end … -->`) are framework-owned — never edit inside the markers; proto-update replaces block interiors wholesale. Project customizations live outside the markers, and on any conflict the text outside the markers wins.
 
 | Path | Holds | How it changes |
 |---|---|---|
 | `CLAUDE.md` | Rules of operation only — including how to build/test/run the project | All other project knowledge belongs in `proto/`, never here |
+| `AGENTS.md` | Shim: the relative import `@CLAUDE.md` plus a short operational note, for harnesses that read `AGENTS.md` instead of `CLAUDE.md` | Framework-owned copy (`copy-if-absent`); an existing `AGENTS.md` is never overwritten. Keep the import relative |
 | `proto/STATE.md` | One-screen position: Next / Goal / Roadmap / Milestone / Standing / Waiting on | Rewrite in place. Never grows, never archives |
 | `proto/IDEAS.md` | Parked out-of-scope ideas | Curate: park cheaply, delete on promote/reject. Swept at milestone completion |
 | `proto/WORKLOG.md` | Session-handoff journal | Newest-first. Past entries immutable — correct via a new entry. Rotates into monthly archives at the 500-line cap |
