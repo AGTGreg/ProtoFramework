@@ -1,47 +1,88 @@
 # ProtoFramework
 
-Greg's project-workspace framework: the session-persistence protocols (WORKLOG, repo-local memory, mirrors, decisions, context snapshots), packaged as a versioned template that the **proto-init** skill (plugin `proto`) copies into any new or existing project — personal or company, any project type. Project- and organization-specific details (stack, conventions, connections, people) enter only at init time or while working on the project; the template itself carries none.
+**Give your AI agent a memory that survives the session.**
 
-## How it's consumed
+ProtoFramework is a set of protocols your coding agent follows so that long-running projects stay on track. It installs one `proto/` folder and one rules file into any repo. From then on, every session — today's, next week's, next month's — starts by knowing exactly where the project stands, what the current milestone is, and what to do first.
 
-Humans don't copy this by hand — `proto-init` does:
+**What it does for you:**
 
-1. Clones this repo to a temp dir (or uses a local checkout), strips `.git`.
-2. Reads `manifest.json` — the machine-readable copy plan (files, destinations, merge strategies).
-3. Copies `core/` + the modules the user confirms (à la carte, proposed from each module's `offer` line — no bundles), fills `{{PLACEHOLDERS}}`, runs the codebase scan, auto-fills from the external sources the user names in the interview (task tracker, knowledge base) when their tools are available.
-4. Stamps the version into the target repo as `proto/VERSION`.
+- **Start a session with zero warm-up.** The agent reads one screen (`proto/STATE.md`) and knows the goal, the current milestone, what was done last time, and what to do first.
+- **Finish what you started.** Every task is checked against the current milestone before work begins; good-but-off-topic ideas are parked in `IDEAS.md` and reviewed when the milestone completes — instead of derailing the week.
+- **Ask "why did we do it this way?" months later and get an answer.** Decisions are numbered (`DEC-###`) with reasons, alternatives, and how they turned out; every session leaves a worklog entry you can grep.
+- **Hand off between sessions, machines, or agents.** The record lives in the repo, in plain markdown, under git — not in one tool's chat history.
+- **Straight, grounded answers.** Direct plain-language responses, under 50 words, each with a confidence score tied to how well it's backed by a named source. No assumptions — the agent asks before it guesses, and pushes back with reasons when a request would break something.
+- **Works with your agent.** Claude Code, OpenCode, Goose, Codex — anything that reads `AGENTS.md` or `CLAUDE.md`.
 
-## Versioning
+**Use it on:** any project you work on with an AI agent over more than a couple of sessions — software, automations, research, content, ops. New repos or existing codebases.
 
-- `PROTO_VERSION` — semver of this template.
-- Protocol text in `core/AGENTS.md` is wrapped in markers: `<!-- proto:begin <block>@<version> -->` … `<!-- proto:end <block> -->`. The `proto-update` skill swaps outdated blocks in initialized projects without touching project-specific text.
-- Every change: bump versions (file + affected block markers), record in `CHANGELOG.md`.
+---
 
-## Update policy
+## Getting started
 
-- **MINOR/PATCH** releases change protocol text inside blocks and/or add new blocks or files — proto-update applies them mechanically to initialized projects.
-- Anything that **moves, renames, or deletes files in target projects is a MAJOR release**; its CHANGELOG entry must carry an explicit migration list. proto-update stops at major boundaries and walks the migration with the owner.
-- **Removing a block** = tombstone entry in `manifest.json` → `removed_blocks` (name, removed_in, disposition). Tombstones are permanent, so skip-version updates stay correct.
-- **Data files** (STATE, WORKLOG, decisions, IDEAS, connections, memory) **and module files are never updated in place** — they are project data from the moment they're copied. All updatable protocol lives in AGENTS.md blocks; data files carry only a pointer line to their block.
+**1. Install the skills** (once per machine):
 
-## Editing rules
+```bash
+npx skills add AGTGreg/ProtoFramework
+```
 
-- Protocol text changes go **inside** the marked blocks; bump the block's `@version` and `PROTO_VERSION`.
-- Placeholders are `{{UPPER_SNAKE}}` and must be listed in `manifest.json`.
-- New files must be added to `manifest.json` (core or a module with an `offer` line) or proto-init will ignore them.
-- Org-specific content (company names, team members, standard stacks, delivery workflows, tool URLs) must **never** be baked into the template — it enters via placeholders/TODOs filled at init or during project work.
-
-## Layout
+**2. Open your project and initialize it.** In your agent session, say:
 
 ```
-core/        — every project gets these (AGENTS.md protocols + CLAUDE.md import shim, STATE position file, IDEAS parking lot, WORKLOG, memory/, decisions.md, connections, archives/)
-modules/     — à-la-carte templates, proposed individually at init (architecture, environments, client, automations-inventory, working-docs)
-
-In target projects, everything lands inside a `proto/` directory — the operational
-record, cleanly separated from the project's own files. Two files stay at the root:
-AGENTS.md (the protocol — read natively by OpenCode, Goose, Codex and other
-AGENTS.md-aware harnesses) and CLAUDE.md (a shim with the `@AGENTS.md` import,
-which Claude Code expands).
-manifest.json  — copy plan; blocks + placeholders registry; per-module `offer` lines
-PROTO_VERSION  — template semver
+proto-init
 ```
+
+Answer the short interview (project name, type, milestones, language). The skill scaffolds everything and commits it.
+
+**3. Work normally.** The agent now orients itself at session start, logs as it goes, and closes sessions with the record up to date. Nothing extra for you to do.
+
+**4. Update later.** When a new ProtoFramework version ships, say:
+
+```
+proto-update
+```
+
+Your protocol blocks get swapped to the latest version. **Your data is never touched.**
+
+---
+
+## What lands in your repo
+
+```
+your-project/
+├── AGENTS.md          ← the protocol (all rules live here)
+├── CLAUDE.md          ← 2-line shim: imports AGENTS.md for Claude Code
+└── proto/
+    ├── STATE.md       ← one screen: where the project stands, what's next
+    ├── IDEAS.md       ← parking lot for out-of-scope ideas
+    ├── WORKLOG.md     ← session journal, newest first
+    ├── decisions.md   ← numbered decisions (DEC-###) with reasons & outcomes
+    ├── connections.md ← external systems the project touches
+    ├── memory/        ← durable project facts
+    ├── context/       ← optional modules you pick at init
+    │                     (architecture, environments, client, automations, docs)
+    ├── archives/      ← rotated history
+    └── VERSION        ← installed framework version
+```
+
+Your code owns the repo root. The framework owns one folder and two small files.
+
+## How it works
+
+- **One source of truth.** All protocol text lives in `AGENTS.md` inside versioned blocks (`<!-- proto:begin … -->`). OpenCode, Goose and Codex read it natively; Claude Code reads it through the `CLAUDE.md` import shim.
+- **Blocks are framework-owned; everything else is yours.** `proto-update` swaps block interiors and never touches your data files, your custom sections, or your code.
+- **Sessions are cheap.** Orientation is one bounded command (~1k tokens), not a pile of file reads. Deeper reads happen only when a task actually needs them.
+- **The agent behaves.** Grounding rules (no assumptions, name your sources, push back with reasons) and plain-language rules (direct answers under 50 words, confidence %) are baked into the protocol — they apply no matter which agent or whose machine.
+
+## Updating & versioning (maintainers)
+
+- `PROTO_VERSION` — template semver. Every block carries its own `@version` in its marker.
+- **MINOR/PATCH** = block-text or additive changes; `proto-update` applies them mechanically.
+- **MAJOR** = anything that moves/renames/deletes files in target projects; the CHANGELOG entry carries a migration list that `proto-update` walks with the owner.
+- Removed blocks get a tombstone in `manifest.json` → `removed_blocks`, so skip-version updates stay correct.
+- Data files and module files are never updated in place — they're project data from the moment they're copied.
+
+## Editing rules (contributors)
+
+- Protocol changes go **inside** the marked blocks; bump the block `@version` and `PROTO_VERSION`; record in `CHANGELOG.md`.
+- Placeholders are `{{UPPER_SNAKE}}` and must be listed in `manifest.json`. New files must be in the manifest (core, or a module with an `offer` line).
+- Nothing organization-specific is ever baked into the template — specifics enter at init or during project work.
