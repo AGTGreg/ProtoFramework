@@ -1,6 +1,6 @@
 # Worklog — session handoff
 
-Protocol: `CLAUDE.md` → "WORKLOG.md protocol" (write moments, exact entry format, tags, rotation). Newest entry first, under the `---`.
+Protocol: `AGENTS.md` → "WORKLOG.md protocol" (write moments, exact entry format, tags, rotation). Newest entry first, under the `---`.
 
 ---
 

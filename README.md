@@ -14,7 +14,7 @@ Humans don't copy this by hand — `proto-init` does:
 ## Versioning
 
 - `PROTO_VERSION` — semver of this template.
-- Protocol text in `core/CLAUDE.md` is wrapped in markers: `<!-- proto:begin <block>@<version> -->` … `<!-- proto:end <block> -->`. The `proto-update` skill swaps outdated blocks in initialized projects without touching project-specific text.
+- Protocol text in `core/AGENTS.md` is wrapped in markers: `<!-- proto:begin <block>@<version> -->` … `<!-- proto:end <block> -->`. The `proto-update` skill swaps outdated blocks in initialized projects without touching project-specific text.
 - Every change: bump versions (file + affected block markers), record in `CHANGELOG.md`.
 
 ## Update policy
@@ -22,7 +22,7 @@ Humans don't copy this by hand — `proto-init` does:
 - **MINOR/PATCH** releases change protocol text inside blocks and/or add new blocks or files — proto-update applies them mechanically to initialized projects.
 - Anything that **moves, renames, or deletes files in target projects is a MAJOR release**; its CHANGELOG entry must carry an explicit migration list. proto-update stops at major boundaries and walks the migration with the owner.
 - **Removing a block** = tombstone entry in `manifest.json` → `removed_blocks` (name, removed_in, disposition). Tombstones are permanent, so skip-version updates stay correct.
-- **Data files** (STATE, WORKLOG, decisions, IDEAS, connections, memory) **and module files are never updated in place** — they are project data from the moment they're copied. All updatable protocol lives in CLAUDE.md blocks; data files carry only a pointer line to their block.
+- **Data files** (STATE, WORKLOG, decisions, IDEAS, connections, memory) **and module files are never updated in place** — they are project data from the moment they're copied. All updatable protocol lives in AGENTS.md blocks; data files carry only a pointer line to their block.
 
 ## Editing rules
 
@@ -34,12 +34,14 @@ Humans don't copy this by hand — `proto-init` does:
 ## Layout
 
 ```
-core/        — every project gets these (CLAUDE.md protocols, STATE position file, IDEAS parking lot, WORKLOG, memory/, decisions.md, connections, archives/)
+core/        — every project gets these (AGENTS.md protocols + CLAUDE.md import shim, STATE position file, IDEAS parking lot, WORKLOG, memory/, decisions.md, connections, archives/)
 modules/     — à-la-carte templates, proposed individually at init (architecture, environments, client, automations-inventory, working-docs)
 
 In target projects, everything lands inside a `proto/` directory — the operational
-record, cleanly separated from the project's own files. Only CLAUDE.md stays at the
-root (it must, for auto-loading).
+record, cleanly separated from the project's own files. Two files stay at the root:
+AGENTS.md (the protocol — read natively by OpenCode, Goose, Codex and other
+AGENTS.md-aware harnesses) and CLAUDE.md (a shim with the `@AGENTS.md` import,
+which Claude Code expands).
 manifest.json  — copy plan; blocks + placeholders registry; per-module `offer` lines
 PROTO_VERSION  — template semver
 ```

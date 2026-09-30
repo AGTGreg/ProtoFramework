@@ -1,5 +1,5 @@
 {
-  "proto_version": "1.12.0",
+  "proto_version": "2.0.0",
   "blocks": [
     "orient",
     "state-protocol",
@@ -31,14 +31,14 @@
   ],
   "core": [
     {
-      "src": "core/CLAUDE.md",
-      "dest": "CLAUDE.md",
+      "src": "core/AGENTS.md",
+      "dest": "AGENTS.md",
       "strategy": "merge-blocks"
     },
     {
-      "src": "core/AGENTS.md",
-      "dest": "AGENTS.md",
-      "strategy": "copy-if-absent"
+      "src": "core/CLAUDE.md",
+      "dest": "CLAUDE.md",
+      "strategy": "ensure-import"
     },
     {
       "src": "core/STATE.md",
@@ -114,8 +114,9 @@
     }
   ],
   "strategies": {
-    "merge-blocks": "If dest exists: keep ALL existing content, append the proto-marked blocks (and only them) below it; never duplicate a block that already exists (match by marker name). If dest absent: copy whole file.",
-    "copy-if-absent": "Copy only if dest does not exist. On collision: skip and report — never overwrite."
+    "merge-blocks": "Applies to AGENTS.md. If dest exists: keep ALL existing content, append the proto-marked blocks (and only them) below it; never duplicate a block that already exists (match by marker name). If dest absent: copy whole file.",
+    "copy-if-absent": "Copy only if dest does not exist. On collision: skip and report — never overwrite.",
+    "ensure-import": "Dest absent → copy the template shim. Dest exists → append a line containing `@AGENTS.md` if no such line is present; never modify anything else."
   },
   "module_selection": "Modules are independent and à la carte — no bundles. proto-init proposes each module whose `offer` line matches what it learned about the project (type, codebase scan, interview answers); the user confirms the final set. Zero modules is valid.",
   "removed_blocks": [

@@ -1,6 +1,6 @@
 # STATE — {{PROJECT_NAME}}
 
-> Protocol: `CLAUDE.md` → "STATE.md protocol". One screen, rewritten in place — history lives in [WORKLOG.md](WORKLOG.md), reasoning in [decisions.md](decisions.md).
+> Protocol: `AGENTS.md` → "STATE.md protocol". One screen, rewritten in place — history lives in [WORKLOG.md](WORKLOG.md), reasoning in [decisions.md](decisions.md).
 
 **As of:** {{SNAPSHOT_DATE}}
 

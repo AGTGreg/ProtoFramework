@@ -1,11 +1,11 @@
 ---
 name: proto-update
-description: Update a proto-initialized project to the latest ProtoFramework — swap outdated protocol blocks in CLAUDE.md, remove tombstoned blocks, never touch project data. Trigger on "proto-update", "proto update", "update the proto framework", "update the protocols", "bring the framework up to date".
+description: Update a proto-initialized project to the latest ProtoFramework — swap outdated protocol blocks in AGENTS.md (CLAUDE.md is the import shim), remove tombstoned blocks, walk MAJOR migrations from the CHANGELOG, never touch project data. Trigger on "proto-update", "proto update", "update the proto framework", "update the protocols", "bring the framework up to date".
 ---
 
 # proto-update
 
-Brings an initialized project's protocol blocks up to the template's versions. Touches ONLY the interiors of `<!-- proto:begin … -->` markers in CLAUDE.md, plus `proto/VERSION`. Everything else — data files, modules, text outside markers — is project property and is never modified.
+Brings an initialized project's protocol blocks up to the template's versions. Touches ONLY the interiors of `<!-- proto:begin … -->` markers in AGENTS.md, plus `proto/VERSION` (and, during a MAJOR migration, exactly the files the CHANGELOG migration list names). Everything else — data files, modules, text outside markers — is project property and is never modified.
 
 ## Template source
 
@@ -26,8 +26,8 @@ Same as proto-init: `PROTO_TEMPLATE_PATH` env var → local checkout; otherwise 
 
 Build and print the plan, then ask the owner to confirm:
 
-- **Swap:** every manifest block present in the target CLAUDE.md with an older `@version` than the template's (compare marker to marker).
-- **Add:** every manifest block absent from the target — appended at the end of CLAUDE.md in template order, together with any non-block sections the blocks depend on that are missing ("Worklog tags", "Convention pointers", "How to work with the owner" — same list proto-init uses).
+- **Swap:** every manifest block present in the target AGENTS.md with an older `@version` than the template's (compare marker to marker).
+- **Add:** every manifest block absent from the target — appended at the end of AGENTS.md in template order, together with any non-block sections the blocks depend on that are missing ("Worklog tags", "Convention pointers", "How to work with the owner" — same list proto-init uses).
 - **Remove:** every `removed_blocks` tombstone whose `removed_in` > T and whose block is still present — delete marker to marker; note the tombstone's disposition in the report.
 - **Skip:** blocks already at the template version; blocks with a NEWER version than the template (warn — the project is partially ahead).
 

@@ -1,5 +1,22 @@
 # Changelog
 
+## 2.0.0 — 2026-09-30
+
+**MAJOR: AGENTS.md is now the canonical protocol file; CLAUDE.md is the import shim.** The 1.12.0 arrangement was inverted: OpenCode reads AGENTS.md but does not expand `@` imports, so the old `@CLAUDE.md` shim left OpenCode sessions protocol-less. Claude Code *does* expand imports in CLAUDE.md — so the one harness that can follow a pointer now gets the pointer, and every AGENTS.md-native harness (OpenCode, Goose, Codex, …) gets the real file.
+
+- `core/AGENTS.md` = the full protocol (all 12 blocks + non-block sections), strategy `merge-blocks`.
+- `core/CLAUDE.md` = two-line shim with `@AGENTS.md`, new strategy `ensure-import` (exists → append the import line if missing, touch nothing else).
+- Data-file pointer headers now point at AGENTS.md. `change-discipline` →2.0.0 (root layout + swapped file roles).
+- proto-init: blocks merge into AGENTS.md; scan's "Working on the code" section lands there; an existing content-bearing CLAUDE.md is flagged with the suggestion to move its content into AGENTS.md.
+- proto-update: targets AGENTS.md.
+
+**Migration 1.x → 2.0.0 (proto-update walks this with the owner):**
+1. Move the ENTIRE content of the project's CLAUDE.md into AGENTS.md. If a 1.12.0-era AGENTS.md shim exists, replace it with this content; if the project has its own AGENTS.md content, keep it above the moved-in protocol.
+2. Replace CLAUDE.md's content with the shim: a title line plus `@AGENTS.md`.
+3. With the owner's OK, update the pointer line in `proto/` data-file headers from CLAUDE.md to AGENTS.md (data files — flag if declined).
+4. Proceed with normal block swaps in AGENTS.md; stamp `proto/VERSION` 2.0.0.
+
+
 ## 1.12.0 — 2026-09-18
 
 Goose (and any other harness that reads `AGENTS.md`) now works on a fresh proto project with no manual step — the template ships the shim.
